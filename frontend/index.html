@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,99 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Analysis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <style>
-        /* Container to center the image horizontally at the top */
-        .image-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px; /* Optional: add some margin to the top */
-        }
-
-        .center-image {
-            max-width: 90%;  /* Adjust the width */
-            height: auto;    /* Maintain aspect ratio */
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="image-container">
-        <img src="Logo-DTC-1.webp" alt="Rectangular Image" class="center-image">
+        <img src="Logo-DTC-1.webp" alt="Logo" class="center-image">
     </div>
     <div class="container mt-5">
         <h1 class="text-center">Azure AI Vision Image Analysis</h1>
-        <h3 class ="text-center">Group : RESTART</h3>
-        <br><br>
-        <form id="imageForm" enctype="multipart/form-data">
+        <h3 class="text-center">Group: Cloud Coders</h3>
+        <hr>
+        <form id="imageForm" enctype="multipart/form-data" class="mt-4">
             <div class="mb-3">
                 <label for="imageUpload" class="form-label">Upload an Image:</label>
                 <input type="file" class="form-control" id="imageUpload" name="image" accept="image/*" required>
             </div>
-            <button type="submit" class="btn btn-primary">Analyze Image</button>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Analyze Image</button>
+            </div>
         </form>
 
         <div id="output" class="mt-5" style="display: none;">
-            <h2>Analysis Results</h2>
-            <img id="uploadedImage" class="img-fluid mb-3" alt="Uploaded Image">
+            <h2 class="text-center">Analysis Results</h2>
+            <img id="uploadedImage" class="img-fluid mb-3 d-block mx-auto" alt="Uploaded Image">
             <div id="results">
                 <!-- Analysis results will appear here -->
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('imageForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const formData = new FormData();
-            const fileInput = document.getElementById('imageUpload');
-            const file = fileInput.files[0];
-            formData.append('image', file);
-
-            try {
-                const uploadedImage = document.getElementById('uploadedImage');
-                uploadedImage.src = URL.createObjectURL(file);
-                document.getElementById('output').style.display = 'block';
-
-                const response = await fetch('http://127.0.0.1:5000/analyze', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
-
-                const result = await response.json();
-                displayResults(result);
-
-            } catch (error) {
-                console.error(error);
-                alert('An error occurred while analyzing the image.');
-            }
-        });
-
-        function displayResults(result) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
-
-            if (result.caption) {
-                const caption = document.createElement('p');
-                caption.innerHTML = `<strong>Caption:</strong> ${result.caption.text} (Confidence: ${(result.caption.confidence * 100).toFixed(2)}%)`;
-                resultsDiv.appendChild(caption);
-            }
-
-            if (result.tags) {
-                const tags = document.createElement('p');
-                tags.innerHTML = `<strong>Tags:</strong> ${result.tags.map(tag => `${tag.name} (${(tag.confidence * 100).toFixed(2)}%)`).join(', ')}`;
-                resultsDiv.appendChild(tags);
-            }
-
-            if (result.objects) {
-                const objects = document.createElement('p');
-                objects.innerHTML = `<strong>Objects:</strong> ${result.objects.map(obj => `${obj.tags[0].name} (${(obj.tags[0].confidence * 100).toFixed(2)}%)`).join(', ')}`;
-                resultsDiv.appendChild(objects);
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
