@@ -28,26 +28,41 @@ document.getElementById('imageForm').addEventListener('submit', async function(e
         alert('An error occurred while analyzing the image.');
     }
 });
-
 function displayResults(result) {
     const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '';
+    resultsDiv.innerHTML = ''; // Clear previous results
 
     if (result.caption) {
-        const caption = document.createElement('p');
-        caption.innerHTML = `<strong>Caption:</strong> ${result.caption.text} (Confidence: ${(result.caption.confidence * 100).toFixed(2)}%)`;
-        resultsDiv.appendChild(caption);
+        const captionCard = document.createElement('div');
+        captionCard.classList.add('result-card', 'caption');
+        captionCard.innerHTML = `
+            <h5>Caption</h5>
+            <p><strong>Text:</strong> ${result.caption.text}</p>
+            <p><strong>Confidence:</strong> ${(result.caption.confidence * 100).toFixed(2)}%</p>
+        `;
+        resultsDiv.appendChild(captionCard);
     }
 
     if (result.tags) {
-        const tags = document.createElement('p');
-        tags.innerHTML = `<strong>Tags:</strong> ${result.tags.map(tag => `${tag.name} (${(tag.confidence * 100).toFixed(2)}%)`).join(', ')}`;
-        resultsDiv.appendChild(tags);
+        const tagsCard = document.createElement('div');
+        tagsCard.classList.add('result-card', 'tags');
+        tagsCard.innerHTML = `
+            <h5>Tags</h5>
+            <p><strong>Tags:</strong> ${result.tags.map(tag => `${tag.name} (${(tag.confidence * 100).toFixed(2)}%)`).join(', ')}</p>
+        `;
+        resultsDiv.appendChild(tagsCard);
     }
 
     if (result.objects) {
-        const objects = document.createElement('p');
-        objects.innerHTML = `<strong>Objects:</strong> ${result.objects.map(obj => `${obj.tags[0].name} (${(obj.tags[0].confidence * 100).toFixed(2)}%)`).join(', ')}`;
-        resultsDiv.appendChild(objects);
+        const objectsCard = document.createElement('div');
+        objectsCard.classList.add('result-card', 'objects');
+        objectsCard.innerHTML = `
+            <h5>Objects</h5>
+            <p><strong>Objects:</strong> ${result.objects.map(obj => `${obj.tags[0].name} (${(obj.tags[0].confidence * 100).toFixed(2)}%)`).join(', ')}</p>
+        `;
+        resultsDiv.appendChild(objectsCard);
     }
+
+    // Make the output visible after results are displayed
+    document.getElementById('output').style.display = 'block';
 }
